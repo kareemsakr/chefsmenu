@@ -24,7 +24,7 @@ from server.models import db
 
 
 def create_app():
-    app = Flask(__name__, static_folder="../client/build", static_url_path="/")
+    app = Flask(__name__, static_folder="../client/build", static_url_path="/") # TODO this needs work
 
     @app.route("/manifest.json")
     def manifest():

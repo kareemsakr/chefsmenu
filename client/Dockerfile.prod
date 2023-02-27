@@ -1,0 +1,15 @@
+FROM node:12.0.0-alpine AS build-stage
+
+WORKDIR /app/
+COPY package*.json .
+RUN npm i
+COPY . .
+RUN npm run build
+
+FROM nginx:1.12-alpine
+
+RUN addgroup app && adduser -S -G app app
+USER app
+COPY --from=build-stage /app/build /usr/share/nginx/html
+EXPOSE 80
+ENTRYPOINT [ "nginx", "-g", "daemon:off;"]

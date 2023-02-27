@@ -1,0 +1,25 @@
+services:
+  frontend:
+    build: ./client
+    ports:
+      - 3000:3000
+    volumes:
+      - ./client:/app
+  backend:
+    build: ./server
+    ports:
+      - 3001:3001
+    volumes:
+      - ./server:/app
+    environment:
+      DB_URL: postgresql://username:password@database:5432/database ## hostname will equal the container name
+    command: ./wait-for db:5432 migrate_command && service_startup_command
+    ## command: ./docker-entry-point.sh ## we can move as many commands as we'd like into that sh file and just call it
+  database:
+    image: postgres:alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - my_db:/var/lib/postgresql/data ## here we are just mapping a predefined volume to a container directory
+volumes:
+  my_db: ## here we define the volume
